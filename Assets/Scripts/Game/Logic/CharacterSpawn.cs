@@ -53,8 +53,8 @@ namespace Project
                 });
                 world.EntityManager.SetComponentData<AnimationUpdate>(entity, new AnimationUpdate()
                 {
-                    CurrentTimer = 0f,
-                    CurrentFrame = 0,
+                    CurrentTimer = UnityEngine.Random.Range(0f,0.3f),
+                    CurrentFrame = UnityEngine.Random.Range(0,2),
                     ClipEntity = AnimationManager.Instance.GetAnimtionEntity(0),
                     Clip = AnimationManager.Instance.GetAnimClip(AnimationManager.Instance.GetAnimtionEntity(0))
                 }) ;

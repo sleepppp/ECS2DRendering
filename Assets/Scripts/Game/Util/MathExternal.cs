@@ -14,5 +14,10 @@ namespace Project
         {
             return new Vector4(f.x, f.y, f.z, f.w);
         }
+
+        public static Vector3 ToVector3(this float3 f)
+        {
+            return new Vector3(f.x, f.y, f.z);
+        }
     }
 }
