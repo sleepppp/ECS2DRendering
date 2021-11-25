@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerIdleAnimation
   m_EditorClassIdentifier: 
   ID: 0
-  FrameRateDelay: 0.5
+  FrameRateDelay: 0.2
   IsLoop: 1
   Sprites:
   - {fileID: -6447722072507503168, guid: 10f3cacccb0c4c547be76836eba20664, type: 3}
