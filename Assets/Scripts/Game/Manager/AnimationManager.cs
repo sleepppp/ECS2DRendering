@@ -11,11 +11,17 @@ namespace Project
     public class AnimationManager : MonoBehaviourSingleton<AnimationManager>
     {
         public List<AnimationClipAsset> ClipList;
-        public List<Texture2D> TextureList;
-     
-        List<Entity> _animationEntityList = new List<Entity>();
+        public List<TextureAsset> TextureList;
+
+        Dictionary<int, AnimationClipAsset> _clipContainer = new Dictionary<int, AnimationClipAsset>();
+        Dictionary<int, Entity> _entityContainer = new Dictionary<int, Entity>();
+        Dictionary<int, Texture2D> _textureContainer = new Dictionary<int, Texture2D>();
         private void Awake()
         {
+            foreach (var item in ClipList)
+                _clipContainer.Add(item.ID, item);
+            foreach (var item in TextureList)
+                _textureContainer.Add(item.ID, item.Texture);
             GenerateAnimationEntities();
         }
 
@@ -28,16 +34,18 @@ namespace Project
             {
                 AnimationClipAsset asset = ClipList[i];
                 Entity entity = world.EntityManager.CreateEntity(archetype);
+                int textureID = GetTextureID(asset);
                 world.EntityManager.SetName(entity, asset.name);
                 AnimationClip clip = new AnimationClip()
                 {
-                    TextureID = GetTextureID(asset),
+                    TextureID = textureID,
                     FrameCount = asset.Sprites.Length,
                     FrameRateDelay = asset.FrameRateDelay,
                     IsLoop = asset.IsLoop
                 };
 
                 world.EntityManager.SetComponentData<AnimationClip>(entity, clip);
+
                 DynamicBuffer<AnimationKeyFrame> keyframeBuffer = world.EntityManager.AddBuffer<AnimationKeyFrame>(entity);
                 foreach(var sprite in asset.Sprites)
                 {
@@ -48,38 +56,39 @@ namespace Project
                     keyframeBuffer.Add(keyframe);
                 }
 
-                _animationEntityList.Add(entity);
+                _entityContainer.Add(asset.ID,entity);
             }
         }
 
         public AnimationClipAsset GetAnimationClipAsset(int id)
         {
-            return ClipList.Find((item) => { return item.ID == id; });
+            AnimationClipAsset result = null;
+            _clipContainer.TryGetValue(id, out result);
+            return result;
         }
 
         public Texture2D GetTexture(int id)
         {
-            if (id >= TextureList.Count)
-                return null;
-            return TextureList[id];
+            Texture2D result = null;
+            _textureContainer.TryGetValue(id, out result);
+            return result;
         }
 
-        public int GetTextureID(AnimationClipAsset clip)
+        public int GetTextureID(AnimationClipAsset asset)
         {
-            Sprite sprite = clip.Sprites[0];
-            for(int i =0; i < TextureList.Count; ++i)
+            foreach(var item in _textureContainer)
             {
-                if (TextureList[i] == sprite.texture)
-                    return i;
+                if (item.Value == asset.Sprites[0].texture)
+                    return item.Key;
             }
-            return -1;
+            return 0;
         }
 
         public Entity GetAnimtionEntity(int id)
         {
-            if (id >= _animationEntityList.Count)
-                return Entity.Null;
-            return _animationEntityList[id];
+            Entity result = Entity.Null;
+            _entityContainer.TryGetValue(id, out result);
+            return result;
         }
 
         public AnimationClip GetAnimClip(Entity entity)

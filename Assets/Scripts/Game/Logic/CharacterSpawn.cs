@@ -25,7 +25,7 @@ namespace Project
                     typeof(Scale),
                     typeof(LocalToWorld),
                     typeof(Render2DComponent),
-                    typeof(Render2DAnimationComponent),
+                    typeof(Render2DUVComponent),
                     typeof(AnimationUpdate)
                 );
 
@@ -43,12 +43,10 @@ namespace Project
                 });
                 world.EntityManager.SetSharedComponentData<Render2DComponent>(entity, new Render2DComponent() 
                 {
-                    TextureID = 0   //todo 지금은 테스트용으로 0번인덱스 텍스쳐를 사용합니다
+                    TextureID = 0   //todo 지금은 테스트용으로 0번 텍스쳐를 사용합니다
                 });
-                world.EntityManager.SetComponentData<Render2DAnimationComponent>(entity, new Render2DAnimationComponent() 
+                world.EntityManager.SetComponentData<Render2DUVComponent>(entity, new Render2DUVComponent() 
                 {
-                    //todo 지금은 테스트용으로 0번 클립을 사용합니다
-                    TextureID = 0,
                     CustomUV = new CustomUV() { Value = AnimationManager.Instance.GetAnimationClipAsset(0).GetCustomUV(0) }
                 });
                 world.EntityManager.SetComponentData<AnimationUpdate>(entity, new AnimationUpdate()
@@ -59,6 +57,8 @@ namespace Project
                     Clip = AnimationManager.Instance.GetAnimClip(AnimationManager.Instance.GetAnimtionEntity(0))
                 }) ;
             }
+
+            EntitySingleton<WorldComponent>.SetComponentData(new WorldComponent() { ObjectCount = InstanceCount });
         }
 
         float3 GetRandomSpawnPosition()

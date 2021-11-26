@@ -6,7 +6,7 @@ namespace Project.ECS
     {
         protected override void OnUpdate()
         {
-        
+            
         }
     }
 }

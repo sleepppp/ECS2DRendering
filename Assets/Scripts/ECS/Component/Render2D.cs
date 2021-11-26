@@ -7,9 +7,8 @@ namespace Project.ECS
         public int TextureID;
     }
 
-    public struct Render2DAnimationComponent : IComponentData
+    public struct Render2DUVComponent : IComponentData
     {
-        public int TextureID;   
         public CustomUV CustomUV;
     }
 
